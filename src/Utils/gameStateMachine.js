@@ -37,6 +37,9 @@ export const gameStateMachine = Machine({
                     NEXT_GAME: {
                         target: STATES.GAME,
                         cond: context => context.lives
+                    },
+                    RETURN_TO_MENU: {
+                        target: STATES.MENU
                     }
                 }
             },

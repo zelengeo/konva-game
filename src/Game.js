@@ -17,7 +17,7 @@ function Game() {
             }}/>;
             break;
         case STATES.GAME:
-            children = <GameStage {...current.context} toResults={() => {console.log("qqq",); return send("END")}}/>;
+            children = <GameStage {...current.context} toResults={() => send("END_GAME_SESSION")} toMenu={() => send("RETURN_TO_MENU")}/>;
             break;
         case STATES.RESULT:
             children = <GameResults {...current.context} toMenu={() => send("END")} restartGame={() => send("RESTART")}/>;
