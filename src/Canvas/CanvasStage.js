@@ -22,20 +22,19 @@ export const KEYBOARD_EVENTS_MOVE_MAP = {
 };
 
 
-function CanvasStage({width, height, updateDirection}) {
+function CanvasStage({ updateDirection, ...posProps }) {
 
 
-    const canvasRef = React.useRef(null);
+    // const canvasRef = React.useRef(null);
 
     useEventHandler('keydown', function(event) {
-        if (KEYBOARD_EVENTS_MOVE_MAP.hasOwnProperty(event.code)) {
+        if (KEYBOARD_EVENTS_MOVE_MAP[event.code]) {
             event.preventDefault();
-            console.log("canvasRef",canvasRef);
-            updateDirection(KEYBOARD_EVENTS_MOVE_MAP[event.code]);
+            updateDirection((event.shiftKey ? 3 : 1) * KEYBOARD_EVENTS_MOVE_MAP[event.code]);
         }
     });
 
-    return <CanvasLayer width={width} height={height} ref={canvasRef}/>
+    return <CanvasLayer {...posProps} />
 
 }
 

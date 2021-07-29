@@ -1,24 +1,29 @@
-import React from 'react';
+import React, {useRef, useEffect, useContext} from 'react';
 import PropTypes from 'prop-types';
+import {DebugContext} from "../Utils/withDebugContext";
 
+const getCtx = (ref) => ref.current.getContext('2d');
+const CanvasLayer = ({posX, posY, width, height}) => {
+    const debug = useContext(DebugContext);
+    debug.render && console.log("Canvas layer rerender", {posX, posY, width, height})
 
-const CanvasLayer = React.forwardRef(({posX, posY, width, height}, canvasRef) => {
-
-    // const canvasRef = React.useRef(null);
-    // const getCanvasContext = () => canvasRef.current.getContext('2d');
+    const canvasRef = useRef(null);
+    useEffect(()=>{
+        debug.canvas && console.log("Canvas redraw at useEffect:", {posX, posY});
+        const ctx = getCtx(canvasRef);
+        ctx.clearRect(0, 0, width, height);
+        ctx.fillStyle = 'rgb(0, 0, 200)';
+        ctx.fillRect(posX, posY, 20, 20);
+        //FIXME: debug value causes deps warning
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    },[posX, posY, width, height])
 
     return <canvas width={width}
                    height={height}
                    ref={canvasRef}
-                   // onClick={
-                   //     e => {
-                   //         const ctx = getCanvasContext();
-                   //         ctx.fillRect(e.clientX, e.clientY, 20, 20)
-                   //     }
-                   // }
     />
 
-})
+};
 
 CanvasLayer.defaultProps = {
     width: 800,
@@ -29,7 +34,9 @@ CanvasLayer.defaultProps = {
 
 CanvasLayer.propTypes = {
     width: PropTypes.number,
-    height: PropTypes.number
+    height: PropTypes.number,
+    posX: PropTypes.number,
+    posY: PropTypes.number
 };
 
 export default CanvasLayer;

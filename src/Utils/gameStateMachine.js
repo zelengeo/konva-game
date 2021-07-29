@@ -1,6 +1,6 @@
 import {assign, Machine} from 'xstate';
 
-const CONSTANTS = {
+const DEFAULTS = {
     LIVES: 3,
     ENEMIES: 2,
     SPEED: 3,
@@ -16,7 +16,7 @@ export const STATES = {
 export const gameStateMachine = Machine({
         id: 'game',
         initial: STATES.MENU,
-        context: {lives: CONSTANTS.LIVES, enemies: CONSTANTS.ENEMIES, score: CONSTANTS.SCORE, speed: CONSTANTS.SPEED},
+        context: {lives: DEFAULTS.LIVES, enemies: DEFAULTS.ENEMIES, score: DEFAULTS.SCORE, speed: DEFAULTS.SPEED},
         states: {
             [STATES.MENU]: {
                 on: {
