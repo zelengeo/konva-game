@@ -4,6 +4,7 @@ function useEventHandler(type, handler, target = document, options) {
   const savedHandler = useRef();
 
   useEffect(() => {
+      console.log("useEffect", savedHandler.current === handler)
     savedHandler.current = handler;
   }, [handler]);
 

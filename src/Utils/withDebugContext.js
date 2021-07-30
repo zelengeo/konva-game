@@ -11,10 +11,7 @@ function WithDebugContext({children}) {
         const target = event.target;
         const value = target.checked;
         const name = target.name;
-        setDebug(prev => {
-            // prev[name] = value;
-            return {...prev, [name]:value};
-        });
+        setDebug(prev =>  ({...prev, [name]:value}));
     }
 
     return <DebugContext.Provider value={debug}>

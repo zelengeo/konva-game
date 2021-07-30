@@ -11,3 +11,9 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }
+
+.canvas-stage-container {
+  position: relative;
+  width: 810px;
+  height:  610px;
+}
