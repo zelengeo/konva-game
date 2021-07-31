@@ -25,8 +25,7 @@ CanvasStage.defaultProps = {
 
 CanvasStage.propTypes = {
     width: PropTypes.number,
-    height: PropTypes.number,
-    updateDirection: PropTypes.func
+    height: PropTypes.number
 };
 
 export default CanvasStage;
