@@ -1,14 +1,17 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import {useMachine} from '@xstate/react';
 import gameStateMachine, {STATES} from "./Utils/gameStateMachine";
 import GameMenu from "./GameStates/GameMenu";
 import GameStage from "./GameStates/GameStage";
 import GameResults from "./GameStates/GameResults";
+import {DebugContext} from "./Utils/withDebugContext";
 
 function Game() {
     const [current, send] = useMachine(gameStateMachine);
 
-    console.log("GAME STATE", current);
+    const debug = useContext(DebugContext);
+    debug.state && console.log("GAME STATE", current);
+
     let children;
     switch (current.value) {
         case STATES.MENU:

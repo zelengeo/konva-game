@@ -22,7 +22,7 @@ export const KEYBOARD_EVENTS_MOVE_MAP = {
 };
 
 //menu with inputs and START button
-function GameCore({moveSpeed}) {
+function GameCore({speed}) {
     const [actorPosX, setActorPosX] = useState(0);
     const [actorPosY, setActorPosY] = useState(0);
     const debug = useContext(DebugContext);
@@ -33,13 +33,13 @@ function GameCore({moveSpeed}) {
             debug.state && console.log("next Direction", movementValue, actorPosX, actorPosY)
             // TODO: import isOdd
             movementValue % 2
-                ? setActorPosX(prev => prev + movementValue * moveSpeed) //TODO: is moveSpeed setting needed?
-                : setActorPosY(prev => prev + movementValue / 2 * moveSpeed)
+                ? setActorPosX(prev => prev + movementValue * speed) //TODO: is moveSpeed setting needed?
+                : setActorPosY(prev => prev + movementValue / 2 * speed)
         }
-    }, [debug.state, moveSpeed, actorPosX, actorPosY])
+    }, [debug.state, speed, actorPosX, actorPosY])
     useEventHandler('keydown', keydownHandler);
 
-    return  <CanvasStage posX={actorPosX} posY={actorPosY}/>
+    return  <CanvasStage posX={actorPosX} posY={actorPosY} speed={speed}/>
 }
 
 export default GameCore;

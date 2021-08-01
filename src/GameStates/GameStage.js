@@ -2,13 +2,12 @@ import React from 'react';
 
 import GameCore from "./GameCore";
 
-const MOVE_SPEED = 5; // MB move it to setting
 
 //menu with inputs and START button
-function GameStage({toMenu, toResults}) {
+function GameStage({toMenu, toResults, speed, enemies}) {
 
     return <React.Fragment>
-        <GameCore moveSpeed={MOVE_SPEED}/>
+        <GameCore speed={speed} enemies={enemies}/>
         <button onClick={toResults}>RESULTS!</button>
         <button onClick={toMenu}>BACK TO MENU!</button>
     </React.Fragment>;
