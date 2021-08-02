@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import ActorLayer from "./ActorLayer";
+import AvatarLayer from "./AvatarLayer";
 import GridLayer from "./GridLayer";
-import NpcLayer from "./NpcLayer";
+import MobLayer from "./MobLayer";
 
 
 function CanvasStage(props) {
@@ -13,8 +13,8 @@ function CanvasStage(props) {
 
     return <div className={"canvas-stage-container"}>
         <GridLayer/>
-        <NpcLayer speed={props.speed}/>
-        <ActorLayer {...props} />
+        <MobLayer speed={props.speed} mobs={props.mobs}/>
+        <AvatarLayer {...props} />
     </div>
 
 

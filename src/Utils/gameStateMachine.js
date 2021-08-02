@@ -2,7 +2,7 @@ import {assign, Machine} from 'xstate';
 
 const DEFAULTS = {
     LIVES: 3,
-    ENEMIES: 2,
+    MOBS: 2,
     SPEED: 3,
     SCORE: 0
 };
@@ -16,13 +16,13 @@ export const STATES = {
 export const gameStateMachine = Machine({
         id: 'game',
         initial: STATES.MENU,
-        context: {lives: DEFAULTS.LIVES, enemies: DEFAULTS.ENEMIES, score: DEFAULTS.SCORE, speed: DEFAULTS.SPEED},
+        context: {lives: DEFAULTS.LIVES, mobs: DEFAULTS.MOBS, score: DEFAULTS.SCORE, speed: DEFAULTS.SPEED},
         states: {
             [STATES.MENU]: {
                 on: {
                     START: {
                         target: STATES.GAME,
-                        cond: context => context.lives && context.enemies && context.speed
+                        cond: context => context.lives && context.mobs && context.speed
                     },
                     UPDATE_CONTEXT: {
                         actions: "assignContext"

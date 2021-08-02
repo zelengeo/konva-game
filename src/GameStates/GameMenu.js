@@ -1,7 +1,7 @@
 import React from 'react';
 
 
-function GameMenu({lives, enemies, speed, startGame, updateContext}) {
+function GameMenu({lives, mobs, speed, startGame, updateContext}) {
     return <React.Fragment>
         <form>
             <label>
@@ -12,8 +12,8 @@ function GameMenu({lives, enemies, speed, startGame, updateContext}) {
                 </select>
             </label>
             <label>
-                Enemies count:
-                <select value={enemies} onChange={event => updateContext({enemies: event.target.value})}>
+                Mobs count:
+                <select value={mobs} onChange={event => updateContext({mobs: event.target.value})}>
                     {Array.from(Array(4)).map((element, index) =>
                         <option key={index + 1} value={index + 1}>{index + 1}</option>)}
                 </select>

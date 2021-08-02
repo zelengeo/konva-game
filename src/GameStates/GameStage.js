@@ -4,10 +4,10 @@ import GameCore from "./GameCore";
 
 
 //menu with inputs and START button
-function GameStage({toMenu, toResults, speed, enemies}) {
+function GameStage({toMenu, toResults, speed, mobs}) {
 
     return <React.Fragment>
-        <GameCore speed={speed} enemies={enemies}/>
+        <GameCore speed={speed} mobs={mobs}/>
         <button onClick={toResults}>RESULTS!</button>
         <button onClick={toMenu}>BACK TO MENU!</button>
     </React.Fragment>;
