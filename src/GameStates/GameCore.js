@@ -1,4 +1,4 @@
-import React, {useCallback, useContext, useState} from 'react';
+import React, {useCallback, useContext, useRef, useState} from 'react';
 import CanvasStage from "../Canvas/CanvasStage";
 import {DebugContext} from "../Utils/withDebugContext";
 import useEventHandler from "../Utils/useEventListener";
@@ -23,8 +23,10 @@ export const KEYBOARD_EVENTS_MOVE_MAP = {
 
 //menu with inputs and START button
 function GameCore({speed, mobs}) {
+    //TODO state update is not the best wya of handling this probably
     const [actorPosX, setActorPosX] = useState(0);
     const [actorPosY, setActorPosY] = useState(0);
+    const gameBoard = useRef(new GameBoard(height, width));
     const debug = useContext(DebugContext);
     const keydownHandler = useCallback(function(event) {
         if (KEYBOARD_EVENTS_MOVE_MAP[event.code]) {
