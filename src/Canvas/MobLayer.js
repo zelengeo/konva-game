@@ -1,24 +1,10 @@
 import React, {useRef, useEffect, useContext} from 'react';
 import PropTypes from 'prop-types';
 import {DebugContext} from "../Utils/withDebugContext";
+import {getRandomMobs} from "../GameEngine/GameBoard";
 
-const MOB_WIDTH = 5;
-const MOB_HEIGHT = 5;
 const MOB_STYLE = 'rgb(0, 0, 700)'
 
-//TODO better naming
-function getRandomInt(max, negative = false) {
-    const randomMax = Math.random() * max;
-    return Math.floor(negative ? randomMax * 2 - max : randomMax);
-}
-
-function getRandomMobs(amount, speed, width, height) {
-    const mobs = new Array(amount);
-    for (let i = 0; i < amount; i++) {
-        mobs[i] = {x: getRandomInt(width), y: getRandomInt(height), v_x: (getRandomInt(3)||1)*speed , v_y: (getRandomInt(3)||1)*speed} //avoid 0 speed
-    }
-    return mobs;
-}
 
 const getCtx = (ref) => ref.current.getContext('2d');
 
@@ -28,6 +14,7 @@ const MobLayer = ({width, height, speed, mobs}) => {
 
     const canvasRef = useRef(null);
 
+    // all computing will be transferred to the board
     const mobListRef = useRef(getRandomMobs(mobs, speed, width, height));
 
     useEffect(() => {
