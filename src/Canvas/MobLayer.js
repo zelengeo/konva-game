@@ -2,6 +2,7 @@ import React, {useRef, useEffect, useContext} from 'react';
 import PropTypes from 'prop-types';
 import {DebugContext} from "../Utils/withDebugContext";
 import {getRandomMobs} from "../GameEngine/GameBoard";
+import {MOB_HEIGHT, MOB_WIDTH} from "../GameEngine/Mob";
 
 const MOB_STYLE = 'rgb(0, 0, 700)'
 
