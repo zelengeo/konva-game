@@ -3,11 +3,10 @@ import PropTypes from 'prop-types';
 import {DebugContext} from "../Utils/withDebugContext";
 import {getRandomMobs} from "../GameEngine/GameBoard";
 import {MOB_HEIGHT, MOB_WIDTH} from "../GameEngine/Mob";
+import {getCtx} from "../Utils/helpers";
 
 const MOB_STYLE = 'rgb(0, 0, 700)'
 
-
-const getCtx = (ref) => ref.current.getContext('2d');
 
 const MobLayer = ({width, height, speed, mobs}) => {
     const debug = useContext(DebugContext);
@@ -28,19 +27,23 @@ const MobLayer = ({width, height, speed, mobs}) => {
             mobListRef.current.forEach(mob => {
                 let x = mob.x + mob.v_x;
                 let y = mob.y + mob.v_y;
+
+                //X stage collision
                 if (x + MOB_WIDTH > width) {
                     mob.v_x = mob.v_x * -1;
                     mob.x = 2 * width - (x + MOB_WIDTH);
-                } else if (x - MOB_WIDTH < 0 ){
+                } else if (x - MOB_WIDTH < 0) {
                     mob.v_x = mob.v_x * -1;
-                    mob.x =  - (x - MOB_WIDTH);
+                    mob.x = -(x - MOB_WIDTH);
                 } else mob.x = x
+
+                //Y stage collision
                 if (y + MOB_HEIGHT > height) {
                     mob.v_y = mob.v_y * -1;
                     mob.y = 2 * height - (y + MOB_HEIGHT);
-                } else if (y - MOB_HEIGHT < 0 ){
+                } else if (y - MOB_HEIGHT < 0) {
                     mob.v_y = mob.v_y * -1;
-                    mob.y =  - (y - MOB_HEIGHT);
+                    mob.y = -(y - MOB_HEIGHT);
                 } else mob.y = y
                 ctx.fillRect(mob.x, mob.y, MOB_WIDTH, MOB_HEIGHT);
             })
@@ -50,7 +53,7 @@ const MobLayer = ({width, height, speed, mobs}) => {
         return () => {
             cancelAnimationFrame(requestId);
         };
-    }, [ width, height, debug.canvas])
+    }, [width, height, debug.canvas])
 
 
     return <canvas width={width}

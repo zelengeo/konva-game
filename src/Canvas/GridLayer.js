@@ -1,8 +1,8 @@
 import React, {useRef, useEffect, useContext} from 'react';
 import PropTypes from 'prop-types';
 import {DebugContext} from "../Utils/withDebugContext";
+import {getCtx} from "../Utils/helpers";
 
-const getCtx = (ref) => ref.current.getContext('2d');
 const GridLayer = ({width, height}) => {
     const debug = useContext(DebugContext);
     debug.render && console.log("Field layer rerender", {width, height})

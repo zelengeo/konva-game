@@ -7,7 +7,7 @@ import GameCore from "./GameCore";
 function GameStage({toMenu, toResults, speed, mobs}) {
 
     return <React.Fragment>
-        <GameCore speed={speed} mobs={mobs}/>
+        <GameCore speed={speed} mobs={mobs} width={800} height={600}/>
         <button onClick={toResults}>RESULTS!</button>
         <button onClick={toMenu}>BACK TO MENU!</button>
     </React.Fragment>;

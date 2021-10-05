@@ -1,8 +1,8 @@
 import React, {useRef, useEffect, useContext} from 'react';
 import PropTypes from 'prop-types';
 import {DebugContext} from "../Utils/withDebugContext";
+import {getCtx} from "../Utils/helpers";
 
-const getCtx = (ref) => ref.current.getContext('2d');
 const CanvasLayer = ({posX, posY, width, height}) => {
     const debug = useContext(DebugContext);
     debug.render && console.log("Canvas layer rerender", {posX, posY, width, height})
