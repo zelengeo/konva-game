@@ -1,9 +1,10 @@
-import React, {useCallback, useContext, useState} from 'react';
+import React, {useCallback, useContext, useRef, useState} from 'react';
 import CanvasStage from "../Canvas/CanvasStage";
 import {DebugContext} from "../Utils/withDebugContext";
 import useEventHandler from "../Utils/useEventListener";
 import PropTypes from "prop-types";
 import {AVATAR_HEIGHT, AVATAR_WIDTH} from "../Canvas/AvatarLayer";
+import GameBoard from "../GameEngine/GameBoard";
 
 export const MOVE_MAP = {
     LEFT: -1,
@@ -25,35 +26,58 @@ export const KEYBOARD_EVENTS_MOVE_MAP = {
 
 //menu with inputs and START button
 function GameCore({speed, mobs, width, height}) {
-    //TODO state update is not the best wya of handling this probably
-    const [actorPosX, setActorPosX] = useState(0);
-    const [actorPosY, setActorPosY] = useState(0);
-    // const gameBoard = useRef(new GameBoard(height, width));
+    
+    // const [actorPosX, setActorPosX] = useState(0);
+    // const [actorPosY, setActorPosY] = useState(0);
+    const gameBoard = useRef(new GameBoard({height, width, speed, mobs}));
     const debug = useContext(DebugContext);
+    // const keydownHandler = useCallback(function(event) {
+    //     if (KEYBOARD_EVENTS_MOVE_MAP[event.code]) {
+    //         event.preventDefault();
+    //         const movementValue = (event.shiftKey ? 3 : 1) * KEYBOARD_EVENTS_MOVE_MAP[event.code];
+    //         debug.state && console.log("next Direction", movementValue, actorPosX, actorPosY)
+    //         // TODO: import isOdd
+    //         movementValue % 2
+    //             ? setActorPosX(prev => {
+    //                 const next = prev + movementValue * speed;
+    //                 if (next < 0) return 0;
+    //                 if (next + AVATAR_WIDTH > width) return width - AVATAR_WIDTH
+    //                 return next
+    //             })
+    //             : setActorPosY(prev => {
+    //                 const next = prev + movementValue / 2 * speed
+    //                 if (next < 0) return 0;
+    //                 if (next + AVATAR_HEIGHT > height) return height - AVATAR_HEIGHT
+    //                 return next
+    //             })
+    //     }
+    // }, [debug.state, actorPosX, actorPosY, speed, width, height])
     const keydownHandler = useCallback(function(event) {
         if (KEYBOARD_EVENTS_MOVE_MAP[event.code]) {
             event.preventDefault();
             const movementValue = (event.shiftKey ? 3 : 1) * KEYBOARD_EVENTS_MOVE_MAP[event.code];
-            debug.state && console.log("next Direction", movementValue, actorPosX, actorPosY)
+            debug.state && console.log("next Direction", movementValue, event.code)
             // TODO: import isOdd
             movementValue % 2
-                ? setActorPosX(prev => {
-                    const next = prev + movementValue * speed;
-                    if (next < 0) return 0;
-                    if (next + AVATAR_WIDTH > width) return width - AVATAR_WIDTH
-                    return next
-                })
-                : setActorPosY(prev => {
-                    const next = prev + movementValue / 2 * speed
-                    if (next < 0) return 0;
-                    if (next + AVATAR_HEIGHT > height) return height - AVATAR_HEIGHT
-                    return next
-                })
+                ? gameBoard.current.actor.horizontalMove(movementValue)
+                // setActorPosX(prev => {
+                //     const next = prev + movementValue * speed;
+                //     if (next < 0) return 0;
+                //     if (next + AVATAR_WIDTH > width) return width - AVATAR_WIDTH
+                //     return next
+                // })
+                : gameBoard.current.actor.verticalMove(movementValue/2)
+                // setActorPosY(prev => {
+                //     const next = prev + movementValue / 2 * speed
+                //     if (next < 0) return 0;
+                //     if (next + AVATAR_HEIGHT > height) return height - AVATAR_HEIGHT
+                //     return next
+                // })
         }
-    }, [debug.state, actorPosX, actorPosY, speed, width, height])
+    }, [debug.state])
     useEventHandler('keydown', keydownHandler);
 
-    return  <CanvasStage posX={actorPosX} posY={actorPosY} speed={speed} mobs={mobs} height={height} width={width}/>
+    return  <CanvasStage gameBoard={gameBoard.current}/>
 }
 
 CanvasStage.defaultProps = {
