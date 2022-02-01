@@ -1,23 +1,30 @@
-//TODO better naming
-export function getRandomInt(max, negative = false) {
-    const randomMax = Math.random() * max;
-    return Math.floor(negative ? randomMax * 2 - max : randomMax);
-}
+import Mob from "./Mob";
+import Player from "./Player";
 
-export function getRandomMobs(amount, speed, width, height) {
+export function getRandomMobs(amount = 2, speed = 3, width, height) {
     const mobs = new Array(amount);
     for (let i = 0; i < amount; i++) {
-        mobs[i] = {x: getRandomInt(width), y: getRandomInt(height), v_x: (getRandomInt(3)||1)*speed , v_y: (getRandomInt(3)||1)*speed} //avoid 0 speed
+        mobs[i] = Mob.randomize(speed, width, height)
     }
     return mobs;
 }
 
 export class GameBoard {
-    constructor({height, width, playerCoords = {x:0, y:0}}, mobsAmount ) {
+    constructor({height, width, playerCoords = {x:0, y:0}, mobs = 2, speed = 3} ) {
         this.height = height;
         this.width = width;
-        this.playerCoords = {x:0, y:0};
-        this.mobs = []
+        this.player = new Player({...playerCoords, height, width, speed})
+        this.mobs = getRandomMobs(mobs, speed, width, height)
+        //TODO wait for the collision detection research - maybe boundaries will be defined in different way
+        this.boundaries = [{x: 0, y:0},{x: 800, y:0},{x: 800, y:600},{x: 0, y:600}];
+    }
+
+    start() {
+        // Init ticks
+    }
+
+    getPlayer() {
+        return this.player;
     }
 
 }

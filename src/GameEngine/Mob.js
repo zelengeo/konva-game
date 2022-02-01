@@ -1,6 +1,6 @@
 export const MOB_WIDTH = 5;
 export const MOB_HEIGHT = 5;
-//TODO better naming
+
 export function getRandomInt(max, negative = false) {
     const randomMax = Math.random() * max;
     return Math.floor(negative ? randomMax * 2 - max : randomMax);
@@ -14,7 +14,7 @@ export class Mob {
         this.velocity_y = velocity_y;
     }
 
-    randomize(velocity, max_x, max_y) {
+    static randomize(velocity, max_x, max_y) {
         return new Mob(getRandomInt(max_x), getRandomInt(max_y), (getRandomInt(3)||1)*velocity ,(getRandomInt(3)||1)*velocity)
     }
 
