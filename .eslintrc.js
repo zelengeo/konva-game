@@ -3,6 +3,7 @@ module.exports = {
         browser: true,
         es2021: true,
     },
+    plugins: ['react', 'react-hooks', 'prettier'],
     extends: [
         'eslint:recommended',
         'plugin:react/recommended',
@@ -16,6 +17,5 @@ module.exports = {
         ecmaVersion: 'latest',
         sourceType: 'module',
     },
-    plugins: ['react', 'prettier'],
-    rules: { 'prettier/prettier': 'error' },
+    rules: { 'prettier/prettier': 'warn' },
 }
