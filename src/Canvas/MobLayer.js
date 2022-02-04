@@ -1,16 +1,15 @@
-import React, {useRef, useEffect, useContext} from 'react';
+import React, { useRef, useEffect, useContext } from 'react';
 import PropTypes from 'prop-types';
-import {DebugContext} from "../Utils/withDebugContext";
-import {getRandomMobs} from "../GameEngine/GameBoard";
-import {MOB_HEIGHT, MOB_WIDTH} from "../GameEngine/Mob";
-import {getCtx} from "../Utils/helpers";
+import { DebugContext } from '../Utils/withDebugContext';
+import { getRandomMobs } from '../GameEngine/GameCore';
+import { MOB_HEIGHT, MOB_WIDTH } from '../GameEngine/Mob';
+import { getCtx } from '../Utils/helpers';
 
-const MOB_STYLE = 'rgb(0, 0, 700)'
+const MOB_STYLE = 'rgb(0, 0, 700)';
 
-
-const MobLayer = ({width, height, speed, mobs}) => {
+const MobLayer = ({ width, height, speed, mobs }) => {
     const debug = useContext(DebugContext);
-    debug.render && console.log("Mob layer rerender", {width, height})
+    debug.render && console.log('Mob layer rerender', { width, height });
 
     const canvasRef = useRef(null);
 
@@ -18,13 +17,17 @@ const MobLayer = ({width, height, speed, mobs}) => {
     const mobListRef = useRef(getRandomMobs(mobs, speed, width, height));
 
     useEffect(() => {
-        debug.canvas && console.log("Mob redraw at useEffect:", JSON.stringify(mobListRef.current));
+        debug.canvas &&
+            console.log(
+                'Mob redraw at useEffect:',
+                JSON.stringify(mobListRef.current)
+            );
         const ctx = getCtx(canvasRef);
         let requestId;
         ctx.fillStyle = MOB_STYLE;
         const render = () => {
             ctx.clearRect(0, 0, width, height);
-            mobListRef.current.forEach(mob => {
+            mobListRef.current.forEach((mob) => {
                 let x = mob.x + mob.v_x;
                 let y = mob.y + mob.v_y;
 
@@ -35,7 +38,7 @@ const MobLayer = ({width, height, speed, mobs}) => {
                 } else if (x - MOB_WIDTH < 0) {
                     mob.v_x = mob.v_x * -1;
                     mob.x = -(x - MOB_WIDTH);
-                } else mob.x = x
+                } else mob.x = x;
 
                 //Y stage collision
                 if (y + MOB_HEIGHT > height) {
@@ -44,31 +47,32 @@ const MobLayer = ({width, height, speed, mobs}) => {
                 } else if (y - MOB_HEIGHT < 0) {
                     mob.v_y = mob.v_y * -1;
                     mob.y = -(y - MOB_HEIGHT);
-                } else mob.y = y
+                } else mob.y = y;
                 ctx.fillRect(mob.x, mob.y, MOB_WIDTH, MOB_HEIGHT);
-            })
+            });
             requestId = requestAnimationFrame(render);
-        }
+        };
         render();
         return () => {
             cancelAnimationFrame(requestId);
         };
-    }, [width, height, debug.canvas])
+    }, [width, height, debug.canvas]);
 
-
-    return <canvas width={width}
-                   height={height}
-                   ref={canvasRef}
-                   style={{position: "absolute", left: 5, top: 5, zIndex: 2}}
-    />
-
+    return (
+        <canvas
+            width={width}
+            height={height}
+            ref={canvasRef}
+            style={{ position: 'absolute', left: 5, top: 5, zIndex: 2 }}
+        />
+    );
 };
 
 MobLayer.defaultProps = {
     width: 800,
     height: 600,
     mobs: 2,
-    speed: 3
+    speed: 3,
 };
 
 MobLayer.propTypes = {
