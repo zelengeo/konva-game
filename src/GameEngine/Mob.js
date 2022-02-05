@@ -32,43 +32,74 @@ export class Mob {
         ],
         player
     ) {
+        // COLLISION CHECK
+        // 1.Player collision check first Because it causes endGame
+        //
+        // 2. I've taken a brief look at the SAT to detect collision, but it seems too complex for my case
+
+        // PLAYER COLLISION
+        // ...
+
+        // BOUNDARY COLLISION
         // 1.list of conditions which can cause velocity inversion (currently in Mob layer only border collision is checked)
 
-        // 2. I've taken a brief look at the SAT to detect collision but it seems too complex for my case
-
-        // 3.only collision with the board is computed there. Collision with player or player path causes endgame - not bounce off.
-
-        // 4.
+        // 3.
         // vertexes - always even, >= 4
         // edges - always even >=4
 
         // EDGES basic - basic coord diff
-        const edges = vertexes.map((vertex, index, array) => {
-            const nextVertex =
-                index + 1 !== array.length ? array[index + 1] : array[0];
-            return { x: nextVertex.x - vertex.x, y: nextVertex.y - vertex.y };
-        });
+        // const edges = vertexes.map((vertex, index, array) => {
+        //     const nextVertex =
+        //         index + 1 !== array.length ? array[index + 1] : array[0];
+        //     return { x: nextVertex.x - vertex.x, y: nextVertex.y - vertex.y };
+        // });
 
         // EDGES v2 - reduce vertexes into two maps of horizontal/vertical edges. probably try with trees later
-        const edges_h = {};
-        const edges_v = {};
+        // const edges_h = {};
+        // const edges_v = {};
+        // vertexes.forEach((vertex, index, array) => {
+        //     const nextVertex =
+        //         index + 1 !== array.length ? array[index + 1] : array[0];
+        //     if (index % 2) {
+        //         // even - horizontal, vertex.y===nextVertex.y
+        //         if (edges_h[vertex.y]) {
+        //             edges_h[vertex.y].push(vertex.x, nextVertex.x);
+        //         } else {
+        //             edges_h[vertex.y] = [vertex.x, nextVertex.x];
+        //         }
+        //     } else {
+        //         // odd - vertical
+        //         if (edges_v[vertex.x]) {
+        //             edges_v[vertex.x].push(vertex.y, nextVertex.y);
+        //         } else {
+        //             edges_v[vertex.x] = [vertex.y, nextVertex.y];
+        //         }
+        //     }
+        // });
+
+        // The most obvious solution, then use EDGES v2
         vertexes.forEach((vertex, index, array) => {
             const nextVertex =
                 index + 1 !== array.length ? array[index + 1] : array[0];
-            if (index % 2) {
-                // even - horizontal, vertex.y===nextVertex.y
-                if (edges_h[vertex.y]) {
-                    edges_h[vertex.y].push(vertex.x, nextVertex.x);
-                } else {
-                    edges_h[vertex.y] = [vertex.x, nextVertex.x];
+            if (nextVertex.x === vertex.x) {
+                //vertical edge
+                const inverted = this.velocity_x < 0;
+                const x = inverted ? this.x : this.x + MOB_WIDTH;
+                if (
+                    inverted &&
+                    vertex.x < x &&
+                    vertex.x > this.velocity_x + x
+                ) {
+                    //IT CROSSES THE LINE, CHECK IF IT CROSSES EDGE
+                } else if (
+                    !inverted &&
+                    vertex.x < x &&
+                    vertex.x > this.velocity_x + x
+                ) {
+                    //IT CROSSES THE LINE, CHECK IF IT CROSSES EDGE (same as inverted)
                 }
             } else {
-                // odd - vertical
-                if (edges_v[vertex.x]) {
-                    edges_v[vertex.x].push(vertex.y, nextVertex.y);
-                } else {
-                    edges_v[vertex.x] = [vertex.y, nextVertex.y];
-                }
+                //horizontal edge
             }
         });
     }
