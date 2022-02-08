@@ -23,12 +23,13 @@ export class GameCore {
         this.player = new Player({ ...playerCoords, height, width, speed });
         this.mobs = getRandomMobs(mobs, speed, width, height);
         // TODO wait for the collision detection research - maybe boundaries will be defined in different way
-        this.boundaries = [
+        this.vertexes = [
             { x: 0, y: 0 },
-            { x: 800, y: 0 },
-            { x: 800, y: 600 },
-            { x: 0, y: 600 },
+            { x: width, y: 0 },
+            { x: width, y: height },
+            { x: 0, y: height },
         ];
+        this.edges = this._buildEdges();
     }
 
     start() {
@@ -42,14 +43,34 @@ export class GameCore {
     }
 
     tick() {
-        this.mobs.forEach((mob) =>
-            mob.calcNextStep(this.boundaries, this.player)
-        );
+        this.mobs.forEach((mob) => mob.calcNextStep(this.edges, this.player));
         this.tickCount++;
     }
 
     getPlayer() {
         return this.player;
+    }
+
+    _buildEdges(vertexes = this.vertexes) {
+        //Assume vertexes is valid non-empty array
+        return vertexes.map((vertex, index, array) => {
+            const nextVertex =
+                index === array.length - 1 ? array[index + 1] : array[0];
+            if (vertex.x === nextVertex.x)
+                return {
+                    x: vertex.x,
+                    y1: Math.min(vertex.x, nextVertex.x),
+                    y2: Math.max(vertex.x, nextVertex.x),
+                };
+            if (vertex.y === nextVertex.y)
+                return {
+                    x: vertex.x,
+                    y1: Math.min(vertex.x, nextVertex.x),
+                    y2: Math.max(vertex.x, nextVertex.x),
+                };
+            throw new Error('Wrong vertexes', { vertex, nextVertex });
+            //Also, what about two same dots in a row?
+        });
     }
 }
 
