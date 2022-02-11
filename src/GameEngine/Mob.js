@@ -13,7 +13,7 @@ export class Mob {
         this.velocity_x = velocity_x;
         this.velocity_y = velocity_y;
         this.edges = null;
-        this.nextVertex = null;
+        this.foremostIntersection = null;
     }
 
     static randomize(velocity, max_x, max_y) {
@@ -77,27 +77,58 @@ export class Mob {
             this.edges = edges;
             this._computeIntersection(edges);
         }
+        //checkPlayerCollision(player) => endGame / continue
+
+        if (this.foremostIntersection?.edge) {
+            //check if next x/y before the x/y from closes edge
+            // if yes - incremnt this.x else swap the velocity
+        }
     }
 
     _computeIntersection(edges = this.edges) {
         // Closest edge computing
+        let foremostIntersection = { ticks: 1000 }; //TODO remove magic number
+        //TODO make fancy reducer just cuz i can?
         edges.forEach((edge) => {
-            if (edge.hasOwnProperty('x')) {
+            //TODO cover this.x === edge.x and y
+            if (isNaN(edge.y)) {
                 // Vertical
                 if (
+                    !this.velocity_x || //theoretically mob can move vertically
                     (this.velocity_x < 0 && this.x < edge.x) ||
                     (this.velocity_x > 0 && this.x > edge.x)
                 )
                     return;
-                // TODO find intersection
+
+                const ticksBeforeIntersect =
+                    (edge.x - this.x) / this.velocity_x; //negative values avoided by the previous if
+                if (ticksBeforeIntersect >= foremostIntersection.ticks) return;
+                const intersectionY =
+                    this.y + this.velocity_y * ticksBeforeIntersect;
+                if (intersectionY >= edge.y1 && intersectionY <= edge.y2) {
+                    foremostIntersection.ticks = ticksBeforeIntersect;
+                    foremostIntersection.edge = edge;
+                }
             } else {
                 // Horizontal
                 if (
+                    !this.velocity_y ||
                     (this.velocity_y < 0 && this.y < edge.y) ||
                     (this.velocity_y > 0 && this.y > edge.y)
                 )
                     return;
-                // TODO find intersection
+                const ticksBeforeIntersect =
+                    (edge.y - this.y) / this.velocity_y; //negative values avoided by the previous if
+                if (ticksBeforeIntersect >= foremostIntersection.ticks) return;
+                const intersectionX =
+                    this.x + this.velocity_x * ticksBeforeIntersect;
+                if (intersectionX >= edge.x1 && intersectionX <= edge.x2) {
+                    foremostIntersection.ticks = ticksBeforeIntersect;
+                    foremostIntersection.edge = edge;
+                }
+            }
+            if (foremostIntersection.edge) {
+                this.foremostIntersection = foremostIntersection.edge;
             }
         });
     }
