@@ -12,8 +12,8 @@ export class Mob {
         this.y = y;
         this.velocity_x = velocity_x;
         this.velocity_y = velocity_y;
-        this.edges = null;
-        this.foremostIntersection = null;
+        this.edges = null; //Edges list (reference to original consider more durable solution)
+        this.foremostIntersection = null; //closest edge which will be intersected
     }
 
     static randomize(velocity, max_x, max_y) {
@@ -78,10 +78,37 @@ export class Mob {
             this._computeIntersection(edges);
         }
         //checkPlayerCollision(player) => endGame / continue
-
-        if (this.foremostIntersection?.edge) {
-            //check if next x/y before the x/y from closes edge
-            // if yes - incremnt this.x else swap the velocity
+        const nextX = this.x + this.velocity_x;
+        const nextY = this.y + this.velocity_y;
+        let collision = false;
+        if (isNaN(this.foremostIntersection.y)) {
+            collision =
+                this.velocity_x < 0
+                    ? nextX <= this.foremostIntersection.x
+                    : nextX >= this.foremostIntersection.x;
+            if (collision) {
+                this.velocity_x *= -1;
+                this.x = 2 * this.foremostIntersection.x - nextX;
+                //TODO check if there will be no collision after reverse (both x and y can be)
+                this.y = nextY;
+            }
+        } else {
+            collision =
+                this.velocity_y < 0
+                    ? nextY <= this.foremostIntersection.y
+                    : nextY >= this.foremostIntersection.y;
+            if (collision) {
+                this.velocity_y *= -1;
+                this.y = 2 * this.foremostIntersection.y - nextY;
+                //TODO check if there will be no collision after reverse (both x and y can be)
+                this.x = nextX;
+            }
+        }
+        if (collision) {
+            this._computeIntersection(this.edges);
+        } else {
+            this.x = nextX;
+            this.y = nextY;
         }
     }
 
