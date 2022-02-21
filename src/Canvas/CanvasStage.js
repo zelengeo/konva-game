@@ -1,33 +1,21 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import AvatarLayer from "./AvatarLayer";
-import GridLayer from "./GridLayer";
-import MobLayer from "./MobLayer";
+import AvatarLayer from './AvatarLayer';
+import GridLayer from './GridLayer';
+import MobLayer from './MobLayer';
 
-
-function CanvasStage(props) {
-
-
-
-
-
-    return <div className={"canvas-stage-container"}>
-        <GridLayer/>
-        <MobLayer speed={props.speed} mobs={props.mobs}/>
-        <AvatarLayer {...props} />
-    </div>
-
-
+function CanvasStage({ gameBoard }) {
+    return (
+        <div className={'canvas-stage-container'}>
+            <GridLayer gameBoard={gameBoard} />
+            <MobLayer gameBoard={gameBoard} />
+            <AvatarLayer gameBoard={gameBoard} />
+        </div>
+    );
 }
 
-CanvasStage.defaultProps = {
-    width: 800,
-    height: 600
-};
-
 CanvasStage.propTypes = {
-    width: PropTypes.number,
-    height: PropTypes.number
+    gameBoard: PropTypes.object,
 };
 
 export default CanvasStage;
