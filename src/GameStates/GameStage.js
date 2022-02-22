@@ -1,10 +1,4 @@
-import React, {
-    useCallback,
-    useContext,
-    useEffect,
-    useRef,
-    useState,
-} from 'react';
+import React, { useCallback, useContext, useEffect, useRef } from 'react';
 import CanvasStage from '../Canvas/CanvasStage';
 import { DebugContext } from '../Utils/withDebugContext';
 import useEventHandler from '../Utils/useEventListener';
@@ -31,7 +25,7 @@ export const KEYBOARD_EVENTS_MOVE_MAP = {
 
 //menu with inputs and START button
 function GameStage({ speed, mobs, width, height }) {
-    const gameBoard = useRef(new GameCore({ height, width, speed, mobs }));
+    const gameCore = useRef(new GameCore({ height, width, speed, mobs }));
     const debug = useContext(DebugContext);
 
     const keydownHandler = useCallback(
@@ -45,10 +39,8 @@ function GameStage({ speed, mobs, width, height }) {
                     console.log('next Direction', movementValue, event.code);
                 // TODO: import isOdd
                 movementValue % 2
-                    ? gameBoard.current
-                          .getPlayer()
-                          .horizontalMove(movementValue)
-                    : gameBoard.current
+                    ? gameCore.current.getPlayer().horizontalMove(movementValue)
+                    : gameCore.current
                           .getPlayer()
                           .verticalMove(movementValue / 2);
             }
@@ -57,21 +49,21 @@ function GameStage({ speed, mobs, width, height }) {
     );
     useEventHandler('keydown', keydownHandler);
     useEffect(() => {
-        gameBoard.current.start();
-        return gameBoard.current.stop;
+        gameCore.current.start();
+        return gameCore.current.stop;
     }, []);
 
-    return <CanvasStage gameBoard={gameBoard.current} />;
+    return <CanvasStage gameCore={gameCore.current} />;
 }
 
-CanvasStage.defaultProps = {
+GameStage.defaultProps = {
     mobs: 2,
     speed: 3,
-    width: 800,
-    height: 600,
+    width: 400,
+    height: 300,
 };
 
-CanvasStage.propTypes = {
+GameStage.propTypes = {
     mobs: PropTypes.number,
     speed: PropTypes.number,
     width: PropTypes.number,

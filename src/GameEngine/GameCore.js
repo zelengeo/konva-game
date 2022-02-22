@@ -18,44 +18,71 @@ export class GameCore {
         mobs = 2,
         speed = 3,
     }) {
-        this.height = height;
-        this.width = width;
-        this.player = new Player({ ...playerCoords, height, width, speed });
-        this.mobs = getRandomMobs(mobs, speed, width, height);
+        this._height = height;
+        this._width = width;
+        this._player = new Player({ ...playerCoords, height, width, speed });
+        this._mobs = getRandomMobs(mobs, speed, width, height);
         // TODO wait for the collision detection research - maybe boundaries will be defined in different way
-        this.vertexes = [
+        this._vertexes = [
             { x: 0, y: 0 },
             { x: width, y: 0 },
             { x: width, y: height },
             { x: 0, y: height },
         ];
-        this.edges = this._buildEdges();
+        this._edges = this._buildEdges();
+        this._tickCount = 0;
     }
 
-    start() {
-        this.tickCount = 0;
-        this.intervalId = setInterval(this.tick, TICK_DELAY);
+    /*<interface>*/
+    get width() {
+        return this._width;
+    }
+    get height() {
+        return this._height;
+    }
+    get player() {
+        return this._player;
+    }
+    get mobs() {
+        return this._mobs;
+    }
+    get edges() {
+        return this._edges;
+    }
+    get vertexes() {
+        return this._vertexes;
     }
 
-    stop() {
-        this.intervalId && clearInterval(this.intervalId);
-        this.intervalId = null;
+    get tickCount() {
+        return this._tickCount;
     }
 
-    tick() {
-        this.mobs.forEach((mob) => mob.calcNextStep(this.edges, this.player));
-        this.tickCount++;
-    }
+    start = () => {
+        this._tickCount = 0;
+        this._intervalId = setInterval(this.tick, TICK_DELAY);
+    };
 
-    getPlayer() {
-        return this.player;
-    }
+    stop = () => {
+        this._intervalId && clearInterval(this.intervalId);
+        this._intervalId = null;
+    };
 
-    _buildEdges(vertexes = this.vertexes) {
+    tick = () => {
+        this._mobs.forEach((mob) => mob.move(this._edges, this._player));
+        this._tickCount++;
+    };
+    /*</interface>*/
+
+    _buildEdges = (vertexes = this._vertexes) => {
         //Assume vertexes is valid non-empty array
         return vertexes.map((vertex, index, array) => {
             const nextVertex =
-                index === array.length - 1 ? array[index + 1] : array[0];
+                index !== array.length - 1 ? array[index + 1] : array[0];
+            console.log({
+                vertex,
+                nextVertex,
+                isLastIndex: index === array.length - 1,
+            });
             if (vertex.x === nextVertex.x)
                 return {
                     x: vertex.x,
@@ -68,10 +95,11 @@ export class GameCore {
                     y1: Math.min(vertex.x, nextVertex.x),
                     y2: Math.max(vertex.x, nextVertex.x),
                 };
-            throw new Error('Wrong vertexes', { vertex, nextVertex });
-            //Also, what about two same dots in a row?
+            //FIXME ?
+            throw new Error('Wrong vertexes');
+            //Also, what about two same dots in a row? There is no edge and this vertex should not exist
         });
-    }
+    };
 }
 
 export default GameCore;
