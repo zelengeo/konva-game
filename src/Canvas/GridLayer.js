@@ -9,14 +9,15 @@ import GameCore from '../GameEngine/GameCore';
 
 const GridLayer = ({ gameCore }) => {
     const canvasRef = useRef(null);
-    const width = gameCore.width();
-    const height = gameCore.height();
+    const width = gameCore.width;
+    const height = gameCore.height;
     const { scale } = useContext(AppearanceContext);
-    const debug = useContext(DebugContext);
 
+    const debug = useContext(DebugContext);
     debug.render && console.log('Field layer rerender', { width, height });
 
     //TODO also should listen to edges change
+    // Or there should be separate canvas layer with borders and background animation
     useEffect(() => {
         debug.canvas &&
             console.log('Field redraw at useEffect:', { width, height, scale });

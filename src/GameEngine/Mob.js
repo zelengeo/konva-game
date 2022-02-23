@@ -1,6 +1,3 @@
-export const MOB_WIDTH = 5;
-export const MOB_HEIGHT = 5;
-
 export function getRandomInt(max, negative = false) {
     const randomMax = Math.random() * max;
     return Math.floor(negative ? randomMax * 2 - max : randomMax);
@@ -71,6 +68,7 @@ export class Mob {
     //         }
     //     }
     // });
+    // eslint-disable-next-line no-unused-vars
     move(edges, player) {
         //Edges were updated, need to recompute the closest intersection.
         if (edges !== this.edges) {
@@ -80,31 +78,31 @@ export class Mob {
         //checkPlayerCollision(player) => endGame / continue
         const nextX = this.x + this.velocity_x;
         const nextY = this.y + this.velocity_y;
-        let collision = false;
+        let isCollision = false;
         if (isNaN(this.foremostIntersection.y)) {
-            collision =
+            isCollision =
                 this.velocity_x < 0
                     ? nextX <= this.foremostIntersection.x
                     : nextX >= this.foremostIntersection.x;
-            if (collision) {
+            if (isCollision) {
                 this.velocity_x *= -1;
                 this.x = 2 * this.foremostIntersection.x - nextX;
                 //TODO check if there will be no collision after reverse (both x and y can be)
                 this.y = nextY;
             }
         } else {
-            collision =
+            isCollision =
                 this.velocity_y < 0
                     ? nextY <= this.foremostIntersection.y
                     : nextY >= this.foremostIntersection.y;
-            if (collision) {
+            if (isCollision) {
                 this.velocity_y *= -1;
                 this.y = 2 * this.foremostIntersection.y - nextY;
                 //TODO check if there will be no collision after reverse (both x and y can be)
                 this.x = nextX;
             }
         }
-        if (collision) {
+        if (isCollision) {
             this._computeIntersection(this.edges);
         } else {
             this.x = nextX;

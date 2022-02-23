@@ -1,7 +1,7 @@
 import Mob from './Mob';
 import Player from './Player';
 
-const TICK_DELAY = 40;
+const TICK_DELAY = 16; //~60 fps
 export function getRandomMobs(amount = 2, speed = 3, width, height) {
     const mobs = new Array(amount);
     for (let i = 0; i < amount; i++) {
@@ -78,22 +78,17 @@ export class GameCore {
         return vertexes.map((vertex, index, array) => {
             const nextVertex =
                 index !== array.length - 1 ? array[index + 1] : array[0];
-            console.log({
-                vertex,
-                nextVertex,
-                isLastIndex: index === array.length - 1,
-            });
             if (vertex.x === nextVertex.x)
                 return {
                     x: vertex.x,
-                    y1: Math.min(vertex.x, nextVertex.x),
-                    y2: Math.max(vertex.x, nextVertex.x),
+                    y1: Math.min(vertex.y, nextVertex.y),
+                    y2: Math.max(vertex.y, nextVertex.y),
                 };
             if (vertex.y === nextVertex.y)
                 return {
-                    x: vertex.x,
-                    y1: Math.min(vertex.x, nextVertex.x),
-                    y2: Math.max(vertex.x, nextVertex.x),
+                    y: vertex.y,
+                    x1: Math.min(vertex.x, nextVertex.x),
+                    x2: Math.max(vertex.x, nextVertex.x),
                 };
             //FIXME ?
             throw new Error('Wrong vertexes');
