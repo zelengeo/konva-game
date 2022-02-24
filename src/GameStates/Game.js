@@ -2,11 +2,12 @@ import React from 'react';
 
 import GameStage from './GameStage';
 import PropTypes from 'prop-types';
+import AppearanceContext from '../Canvas/AppearanceContext';
 
 //menu with inputs and START button
-function Game({ toMenu, toResults, speed, mobs, width, height }) {
+export function Game({ toMenu, toResults, speed, mobs, width, height, scale }) {
     return (
-        <React.Fragment>
+        <AppearanceContext.Provider value={{ scale }}>
             <GameStage
                 speed={speed}
                 mobs={mobs}
@@ -15,15 +16,16 @@ function Game({ toMenu, toResults, speed, mobs, width, height }) {
             />
             <button onClick={toResults}>RESULTS!</button>
             <button onClick={toMenu}>BACK TO MENU!</button>
-        </React.Fragment>
+        </AppearanceContext.Provider>
     );
 }
 
 Game.defaultProps = {
     mobs: 2,
     speed: 3,
-    width: 800,
-    height: 600,
+    width: 400,
+    height: 300,
+    scale: 2,
 };
 
 Game.propTypes = {
@@ -31,6 +33,7 @@ Game.propTypes = {
     speed: PropTypes.number,
     width: PropTypes.number,
     height: PropTypes.number,
+    scale: PropTypes.number,
     toMenu: PropTypes.func,
     toResults: PropTypes.func,
 };
