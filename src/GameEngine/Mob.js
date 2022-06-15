@@ -111,7 +111,7 @@ export class Mob {
     }
 
     _computeIntersection(edges = this.edges) {
-        // Closest edge computing
+        // Closest edge computing. foremostIntersection format = {ticks: int, edge: {x, y1, y2}|| {y, x1, x2}}
         let foremostIntersection = { ticks: 1000 }; //TODO remove magic number
         //TODO make fancy reducer just cuz i can?
         edges.forEach((edge) => {

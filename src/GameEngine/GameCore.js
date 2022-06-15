@@ -74,7 +74,7 @@ export class GameCore {
     /*</interface>*/
 
     _buildEdges = (vertexes = this._vertexes) => {
-        //Assume vertexes is valid non-empty array
+        //Assume vertexes is valid non-empty array. Edges have format [{x, y1, y2}||{y, x1, x2}]; *not x0 & x1 cuz it is closer to math
         return vertexes.map((vertex, index, array) => {
             const nextVertex =
                 index !== array.length - 1 ? array[index + 1] : array[0];

@@ -59,7 +59,7 @@ const MobLayer = ({ gameCore }) => {
             width={width * scale}
             height={height * scale}
             ref={canvasRef}
-            style={{ position: 'absolute', left: 5, top: 5, zIndex: 3 }}
+            style={{ position: 'absolute', left: 10, top: 10, zIndex: 3 }}
         />
     );
 };
