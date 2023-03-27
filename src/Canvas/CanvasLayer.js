@@ -2,7 +2,7 @@ import React, { useRef, useEffect, useContext } from 'react';
 import PropTypes from 'prop-types';
 import { DebugContext } from '../Utils/withDebugContext';
 import { getCtx } from '../Utils/helpers';
-
+//Attempt to create reusable CanvasLayer - failed one
 const CanvasLayer = ({ posX, posY, width, height }) => {
     const debug = useContext(DebugContext);
     debug.render &&

@@ -1,5 +1,5 @@
 import React, { useCallback, useContext, useEffect, useRef } from 'react';
-import CanvasStage from '../Canvas/CanvasStage';
+import GameStageView from '../Canvas/GameStageView';
 import { DebugContext } from '../Utils/withDebugContext';
 import useEventHandler from '../Utils/useEventListener';
 import PropTypes from 'prop-types';
@@ -53,7 +53,7 @@ function GameStage({ speed, mobs, width, height }) {
         return gameCore.current.stop;
     }, []);
 
-    return <CanvasStage gameCore={gameCore.current} />;
+    return <GameStageView gameCore={gameCore.current} />;
 }
 
 GameStage.defaultProps = {

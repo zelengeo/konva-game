@@ -5,6 +5,7 @@ import WithDebugContext, { DebugContext } from './Utils/withDebugContext';
 import GameMenu from './GameStates/GameMenu';
 import GameResults from './GameStates/GameResults';
 import Game from './GameStates/Game';
+import BackgroundLayer from './Canvas/BackgroundLayer';
 
 function App() {
     const [current, send] = useMachine(gameStateMachine);
@@ -53,7 +54,12 @@ function App() {
     }
 
     // switch with render-props components for menu and result. And game
-    return <WithDebugContext>{children}</WithDebugContext>;
+    return (
+        <WithDebugContext>
+            <BackgroundLayer {...current.context} />
+            {children}
+        </WithDebugContext>
+    );
 }
 
 export default App;

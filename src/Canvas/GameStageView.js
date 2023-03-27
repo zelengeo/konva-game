@@ -5,7 +5,7 @@ import GridLayer from './GridLayer';
 import MobLayer from './MobLayer';
 import AppearanceContext from './AppearanceContext';
 
-function CanvasStage({ gameCore }) {
+function GameStageView({ gameCore }) {
     //TODO
     // Prepare nice error component
     const { scale } = useContext(AppearanceContext);
@@ -27,8 +27,8 @@ function CanvasStage({ gameCore }) {
     );
 }
 
-CanvasStage.propTypes = {
+GameStageView.propTypes = {
     gameCore: PropTypes.object,
 };
 
-export default CanvasStage;
+export default GameStageView;
