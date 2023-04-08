@@ -2,8 +2,10 @@ import React, { useState } from 'react';
 
 const DEBUG_MAP_DEFAULT = { canvas: true, render: true, state: true };
 
-export const DebugContext = React.createContext(DEBUG_MAP_DEFAULT);
 //TODO remove all occurrences
+export const DebugContext = React.createContext(DEBUG_MAP_DEFAULT);
+
+// eslint-disable-next-line react/prop-types
 function WithDebugContext({ children }) {
     const [debug, setDebug] = useState(DEBUG_MAP_DEFAULT);
 

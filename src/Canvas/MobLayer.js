@@ -1,54 +1,50 @@
 import React, { useRef, useEffect, useContext } from 'react';
 import PropTypes from 'prop-types';
 import { DebugContext } from '../Utils/withDebugContext';
-import { getRandomMobs } from '../GameEngine/GameCore';
-import { MOB_HEIGHT, MOB_WIDTH } from '../GameEngine/Mob';
 import { getCtx } from '../Utils/helpers';
+import AppearanceContext from './AppearanceContext';
+import GameCore from '../GameEngine/GameCore';
 
-const MOB_STYLE = 'rgb(0, 0, 700)';
+const MobLayer = ({ gameCore }) => {
+    const canvasRef = useRef(null);
+    const prevTickCountRef = useRef(gameCore.tickCount);
+    const width = gameCore.width;
+    const height = gameCore.height;
+    const { scale, mobStyle } = useContext(AppearanceContext);
 
-const MobLayer = ({ width, height, speed, mobs }) => {
     const debug = useContext(DebugContext);
     debug.render && console.log('Mob layer rerender', { width, height });
 
-    const canvasRef = useRef(null);
-
-    // all computing will be transferred to the board
-    const mobListRef = useRef(getRandomMobs(mobs, speed, width, height));
-
     useEffect(() => {
         debug.canvas &&
-            console.log(
-                'Mob redraw at useEffect:',
-                JSON.stringify(mobListRef.current)
-            );
+            console.log('MobLayer useEffect update: ', width, height);
         const ctx = getCtx(canvasRef);
         let requestId;
-        ctx.fillStyle = MOB_STYLE;
+        ctx.fillStyle = mobStyle; //Upgrade later
+        ctx.scale(scale, scale);
         const render = () => {
+            const ticks = gameCore.tickCount;
+            //TODO check how same frames are rerendered/skipped in grown-up solutions
+            if (prevTickCountRef.current === ticks) {
+                debug.canvas &&
+                    console.log(
+                        'Mob redundant redraw at requestAnimationFrame:',
+                        prevTickCountRef.current
+                    );
+                requestId = requestAnimationFrame(render);
+                return;
+            }
+
+            prevTickCountRef.current = ticks;
+            debug.canvas &&
+                console.log(
+                    'Mob redraw at useEffect:',
+                    prevTickCountRef.current,
+                    JSON.stringify(gameCore.mobs)
+                );
             ctx.clearRect(0, 0, width, height);
-            mobListRef.current.forEach((mob) => {
-                let x = mob.x + mob.v_x;
-                let y = mob.y + mob.v_y;
-
-                //X stage collision
-                if (x + MOB_WIDTH > width) {
-                    mob.v_x = mob.v_x * -1;
-                    mob.x = 2 * width - (x + MOB_WIDTH);
-                } else if (x - MOB_WIDTH < 0) {
-                    mob.v_x = mob.v_x * -1;
-                    mob.x = -(x - MOB_WIDTH);
-                } else mob.x = x;
-
-                //Y stage collision
-                if (y + MOB_HEIGHT > height) {
-                    mob.v_y = mob.v_y * -1;
-                    mob.y = 2 * height - (y + MOB_HEIGHT);
-                } else if (y - MOB_HEIGHT < 0) {
-                    mob.v_y = mob.v_y * -1;
-                    mob.y = -(y - MOB_HEIGHT);
-                } else mob.y = y;
-                ctx.fillRect(mob.x, mob.y, MOB_WIDTH, MOB_HEIGHT);
+            gameCore.mobs.forEach((mob) => {
+                ctx.fillRect(mob.x, mob.y, 1, 1);
             });
             requestId = requestAnimationFrame(render);
         };
@@ -56,30 +52,19 @@ const MobLayer = ({ width, height, speed, mobs }) => {
         return () => {
             cancelAnimationFrame(requestId);
         };
-    }, [width, height, debug.canvas]);
+    }, [gameCore, scale, debug.canvas]);
 
     return (
         <canvas
-            width={width}
-            height={height}
+            width={width * scale}
+            height={height * scale}
             ref={canvasRef}
-            style={{ position: 'absolute', left: 5, top: 5, zIndex: 2 }}
+            style={{ position: 'absolute', left: 10, top: 10, zIndex: 3 }}
         />
     );
 };
 
-MobLayer.defaultProps = {
-    width: 800,
-    height: 600,
-    mobs: 2,
-    speed: 3,
-};
-
 MobLayer.propTypes = {
-    width: PropTypes.number,
-    height: PropTypes.number,
-    mobs: PropTypes.number,
-    speed: PropTypes.number,
+    gameCore: PropTypes.instanceOf(GameCore),
 };
-
 export default MobLayer;
